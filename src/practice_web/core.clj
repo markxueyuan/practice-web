@@ -4,7 +4,8 @@
         [ring.middleware cookies session]
         [compojure.core :only [GET POST PUT defroutes]])
   (:require [ring.util.response :as response]
-            [compojure.route :as route]))
+            [compojure.route :as route]
+            [compojure.handler]))
 
 (defn app
   [{:keys [uri]}]
@@ -40,6 +41,9 @@
 
 
 (def app my-app)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;compojure;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (def ^:private counter (atom 0))
 
@@ -94,7 +98,7 @@
   (route/not-found "Sorry, there is nothing here."))
 
 
-((PUT "/:id"
+((PUT ["/:id"]
       [id url]
       (list "You requested that " url " be assigned ID " id))
  {:uri "/heheid" :params {:url "http://www.sohu.com"} :request-method :put})
@@ -102,16 +106,25 @@
 ((PUT ["/*/*/:id/:id"] [* id] (str * id))
  {:uri "/abc/xyz/foo/bar" :request-method :put})
 
+((PUT ["/:id" :id #"\d+"]
+   [id url]
+   (list "You requested that " url " be assigned id " id))
+ {:uri "/some-id" :params {:url "http://clojurebook.com"} :request-method :put})
 
 
+((PUT ["/:id" :id #"\d+"]
+   [id url]
+   (list "You requested that " url " be assigned id " id))
+ {:uri "/590" :params {:url "http://clojurebook.com"} :request-method :put})
 
+((PUT "/:id" req (str "You requested: " (:uri req)))
+ {:uri "/foo" :request-method :put})
+((PUT "/:id" {:keys [uri]} (str "You requested: " uri))
+ {:uri "/foo" :request-method :put})
 
+;(response/redirect "sohu.com")
 
-
-
-
-
-
+(def app (compojure.handler/api app*))
 
 
 
