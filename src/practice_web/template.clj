@@ -99,6 +99,55 @@
   [message]
   [:.footer] (h/content message))
 
+(footer "hello")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;deftemplate;;;;;;;;;;;;;;;;;
+
+(h/deftemplate friends-list (java.io.File. "friends.html")
+  [username & friends]
+  [:.username] (h/content username)
+  [:ul.friends :li] (h/clone-for [f friends]
+                 (h/content f)))
+
+(apply str (friends-list "Mark" "Xiao Wang" "Xiao Li"))
+
+(h/deftemplate friends-list (java.io.File. "friends.html")
+  [username friends friend-class]
+  [:.username] (h/content username)
+  [:ul.friends :li] (h/clone-for [f friends]
+                       (h/do-> (h/content f)
+                               (h/add-class friend-class)))
+  [:body] (h/append (footer (str "Good bye, " username))))
+
+(apply str (friends-list "Mark" ["Xiao Wang" "Xiao Li"] "economist"))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ;;;;;;;;;;;;;;;;;;;;;;tips;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (range 10 0 -1)
