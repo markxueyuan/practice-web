@@ -5,6 +5,9 @@
         [ring.middleware.content-type]
         [ring.middleware.not-modified]
         [ring.middleware.params]
+        [ring.middleware.cookies]
+        [ring.middleware.session]
+        [ring.middleware.session.cookie]
         )
   (:require [ring.util.response :as rp]))
 
@@ -102,27 +105,54 @@
 (def app5
   (wrap-params normal-handler))
 
+(defn test-handler
+  [request]
+  (assoc (rp/response "hello world") :query-string "q=clojure" :http-method :get :uri "/search"))
+
+(def app6
+  (wrap-params test-handler))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;cookies;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(def app7
+  (wrap-cookies normal-handler))
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;session;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defn handler
+  [{session :session}]
+  (rp/response (str "Hello " (:username session))))
+
+(def app
+  (wrap-session handler))
+
+(app {:session {:username "xue"}})
 
 
+(handler {:session {:username "xue"}})
 
 
+(defn handler
+  [{session :session}]
+  (let [count (:count session 0)
+        session (assoc session :count (inc count))]
+    (-> (rp/response (str "You accessed this page " count " times."))
+        (assoc :session session))))
 
+(defn handler
+  [request]
+  (-> (rp/response "Session deleted")
+      (assoc :session nil)))
 
+(def app
+  (wrap-session handler {:cookie-attrs {:max-age 3600}}))
 
+(def app
+  (wrap-session handler {:cookie-attrs {:secure true}}))
 
-
-(def test-handler
-  (-> normal-handler
-      ;(wrap-resource "practice_web/readme.html")
-      (wrap-content-type)))
-
-
-
-
-
-
+(def app
+  (wrap-session handler {:store (cookie-store {:key "a 16-byte secret"})}))
 
 
 
