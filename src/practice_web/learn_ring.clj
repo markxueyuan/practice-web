@@ -1,4 +1,4 @@
-(ns practice-web.hello-world
+(ns practice-web.learn-ring
   (:use ring.adapter.jetty
         [ring.middleware.file]
         [ring.middleware.resource]
