@@ -9,7 +9,8 @@
                  [compojure "1.1.8"]
                  [enlive "1.1.5"]
                  [clout "1.2.0"]
-                 [ring-mock "0.1.5"]]
+                 [ring-mock "0.1.5"]
+                 [hiccup "1.0.5"]]
   ;:plugins [[lein-ring "0.8.10"]]
   ;:ring {:handler your-app.core/handler}
   :repl-options {:nrepl-middleware [lighttable.nrepl.handler/lighttable-ops]}
