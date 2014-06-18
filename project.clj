@@ -11,7 +11,7 @@
                  [clout "1.2.0"]
                  [ring-mock "0.1.5"]
                  [hiccup "1.0.5"]]
-  ;:plugins [[lein-ring "0.8.10"]]
-  ;:ring {:handler your-app.core/handler}
+  :plugins [[lein-ring "0.8.10"]]
+  :ring {:handler practice-web.serving-data/app}
   :repl-options {:nrepl-middleware [lighttable.nrepl.handler/lighttable-ops]}
   :jvm-opts ["-Xmx1g"])
